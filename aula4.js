@@ -34,15 +34,79 @@ db.users.insertMany([
 //$unset - remove um campo
 //$rename - renomeia um campo
 
-db.users.updateOne({username: 'joao'},{$set: {age:25}});
+db.users.updateOne({ username: "joao" }, { $set: { age: 25 } });
 
 db.users.updateMany(
-    {active: true}, //seleciona todos os usuarios que forem ativos
-    {$set: {premium: true}} //define todos para premium
+  { active: true }, //seleciona todos os usuarios que forem ativos
+  { $set: { premium: true } } //define todos para premium
 );
 
-// --- Operações Matemáticas ---
-//$inc - incrementa o valor de um campo numérico
-//$mul - multiplica o valor de um campo
-//$min - atualiza o campo apenas se o novo valor for menor que o atual
-//$max - atualiza o campo apenas se o novo valor for maior que o atual
+//substitui um documento inteiro por outro novo
+db.users.replaceOne(
+  { username: "maria" },
+  {
+    _id: 2,
+    username: "maria",
+    age: 31,
+    active: true,
+    premium: false,
+    hobbies: [],
+  }
+);
+
+//atualização de documentos com $set
+db.users.updateOne({ username: "joao" }, { $set: { premium: true } });
+//joao agora é premium
+
+//$unset - remove um campo
+db.users.updateOne({ username: "carlos" }, { $unset: { premium: "" } });
+//remove o campo premium do usuário carlos
+
+//$rename - renomeia um campo
+db.users.updateOne({ username: "maria" }, { $rename: { age: "yearsOld" } });
+//age foi renomeado para 'yearsOld' em maria
+
+// --- Operadores matematicos ---
+//$inc - incrementa um valor
+db.users.updateOne({ username: "joao" }, { $inc: { age: 1 } });
+//a idade de joao aumenta em 1
+
+//$mul - multiplica um valor
+db.users.updateOne({ username: "carlos" }, { mul: { age: 2 } });
+//a idade de carlos dobra
+
+//$min
+db.users.updateOne({ username: "joao" }, { $min: { age: 23 } });
+// se a idade de 'joao' for maior que 23, ela é reduzida para 23.
+
+//$max
+db.users.updateOne({ username: "maria" }, { $max: { yearsOld: 35 } });
+//se a idade de 'maria' for menor que 35, ela é aumentada para 35
+
+//$push - adiciona um elemento ao array
+db.users.updateOne({ username: "joao" }, { $push: { hobbies: "guitar" } });
+//guitar é adicionado ao array hobbies de 'joao'
+
+//$pop - remove o primeiro ou o último elemento
+db.users.updateOne({ username: "maria" }, { $pop: { hobbies: -1 } });
+//remove o primeiro item do array hobbies de 'maria'
+
+//$pull - remove elementos específicos
+db.users.updateOne({ username: "carlos" }, { $pull: { hobbies: "gaming" } });
+
+//$addToSet - add um item se ele não existir
+db.users.updateOne({ username: "joao" }, { $addToSet: { hobbies: "chess" } });
+
+//$each - adiciona múltiplos elementos
+db.users.updateOne(
+  { username: "joao" },
+  { $push: { hobbies: { $each: ["coding", "music"] } } }
+);
+
+//ou...
+
+db.users.updateOne(
+  { username: "joao" },
+  { $push: { hobbies: ["codding", "music"] } }
+);
+//coding e music são adicionados a hobbies

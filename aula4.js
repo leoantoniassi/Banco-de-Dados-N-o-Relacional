@@ -83,13 +83,13 @@ db.users.updateOne({ username: "joao" }, { $min: { age: 23 } });
 db.users.updateOne({ username: "maria" }, { $max: { yearsOld: 35 } });
 //se a idade de 'maria' for menor que 35, ela é aumentada para 35
 
-//$push - adiciona um elemento ao array
-db.users.updateOne({ username: "joao" }, { $push: { hobbies: "guitar" } });
-//guitar é adicionado ao array hobbies de 'joao'
-
 //$pop - remove o primeiro ou o último elemento
 db.users.updateOne({ username: "maria" }, { $pop: { hobbies: -1 } });
 //remove o primeiro item do array hobbies de 'maria'
+
+//$push - adiciona um elemento ao array
+db.users.updateOne({ username: "joao" }, { $push: { hobbies: "guitar" } });
+//guitar é adicionado ao array hobbies de 'joao'
 
 //$pull - remove elementos específicos
 db.users.updateOne({ username: "carlos" }, { $pull: { hobbies: "gaming" } });
